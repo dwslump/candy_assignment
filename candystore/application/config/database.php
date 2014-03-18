@@ -48,10 +48,10 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'bungle07.cs.toronto.edu';
-$db['default']['username'] = 'yourusernamegoeshere';
-$db['default']['password'] = 'yourpasswordgoedhere';
-$db['default']['database'] = 'yourdatabasenamegoeshere';  
+$db['default']['hostname'] = 'localhost';
+$db['default']['username'] = 'root';
+$db['default']['password'] = '';
+$db['default']['database'] = 'candystore';  
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
