@@ -20,11 +20,47 @@ class CandyStore extends CI_Controller {
     }
 
     function index() {
+    	$this->load->model('customer_model');
+    	$customers = $this->customer_model->getAll();
+    	$data['customers'] = $customers;
+    	
+    	$query = $this->db->query('SELECT login FROM customer');
+    	
+    	//verify if there is an admin in the database, if not we must create it.
+    	//Why? -> because if someone registers an admin, we must return that already exists an admin and it cannot be created.
+    	if ($query->num_rows() > 0){
+    		foreach ($query->result_array() as $row)
+    		{
+    			if($row['login'] == 'admin'){
+    				//there is an admin! \o/
+    				$data['there_is_admin'] = true;
+    			}
+    		}
+    		if ($data['there_is_admin'] != true){
+    			//create admin
+    			$this->create_admin();
+
+    			//Then we redirect to the index page again
+    			redirect('candystore/index', 'refresh');
+    			
+    		}
+    		//else do nothing
+    	} else{
+    		//create admin
+    		$this->create_admin();
+
+    		//Then we redirect to the index page again
+    		redirect('candystore/index', 'refresh');
+    		
+    	}
+    	
     	if(!$this->session->userdata('is_logged_in')){
+    		//login view
     		$this->load->view('login_view');
     	} else{
     		if($this->session->userdata('login') == 'admin'){
     			//admin view
+    			$this->load->view('admin_view');
     		}
     		else{
     			//user view
@@ -36,6 +72,22 @@ class CandyStore extends CI_Controller {
     		$data['products']=$products;
     		$this->load->view('product/list.php',$data);
     */
+    }
+    
+    function create_admin() {
+    	$this->load->model('customer_model');
+    	
+    	$customer = new Customer();
+    	$customer->first = 'admin';
+    	$customer->last = 'admin';
+    	$customer->login = 'admin';
+    	$customer->password = md5('admin');
+    	$customer->email = 'admin@admin.com';
+    	 
+    	$data = $this->upload->data();
+    	 
+    	$this->customer_model->insert($customer);
+    	
     }
     
     function login_validation(){
