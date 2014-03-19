@@ -36,6 +36,11 @@
 		?>
 		
 	</div>
+	
+	<div id="body">
+	<p>Not a member? <a href= '<?php echo base_url()."candystore/register_customer" ?>'>Register</a></p>
+	
+	</div>
 
 </body>
 </html>

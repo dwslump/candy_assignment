@@ -75,10 +75,98 @@ class CandyStore extends CI_Controller {
     	}
     }
     
+    function register_customer(){
+    	$this->load->view('register_view');
+    }
+    
+    function register_validation(){
+    	
+    	$this->load->library('form_validation');
+    	$this->form_validation->set_rules('first', 'First', 'required|trim');
+    	$this->form_validation->set_rules('last', 'Last', 'required|trim');
+    	$this->form_validation->set_rules('login', 'Login', 'required|trim|callback_isValidLogin');
+    	$this->form_validation->set_rules('password', 'Password', 'required|trim|callback_isValidPassword');
+    	$this->form_validation->set_rules('email', 'Email', 'required|trim|xss_clean|callback_isValidEmail');
+
+    	if ($this->form_validation->run()){
+    		echo '<script language="javascript">';
+    		echo 'alert("Registration Successfull!")';
+    		echo '</script>';
+    		
+    		//create a new member:
+    		$this->load->model('customer_model');
+    			
+    		$customer = new Customer();
+    		$customer->first = $this->input->post('first');
+    		$customer->last = $this->input->post('last');
+    		$customer->login = $this->input->post('login');
+    		$customer->password = $this->input->post('password');
+    		$customer->email = $this->input->post('email');;
+    		
+    		$data = $this->upload->data();
+    		
+    		$this->customer_model->insert($customer);
+    		
+    		$this->session->sess_destroy();    		
+    		
+    		redirect('candystore/index');
+    	}
+    	else{
+    		$this->load->view('register_view');
+    	}
+    	
+    }
+    
+    function isValidLogin() {
+    	$this->db->where('login', $this->input->post('login'));
+    	
+    	$query = $this->db->get('customer');
+    	
+    	if($query->num_rows() == 1){
+    		//found a user
+    		$this->form_validation->set_message('isValidLogin', 'Login already exist');
+    		return false;
+    	}
+    	else{
+    		//can create a user with that login
+    		return true;
+    	}
+    	 
+    }
+    
+    function isValidPassword() {
+    	if(strlen($this->input->post('password')) > 5){
+    		return true;
+    	} else{
+    		$this->form_validation->set_message('isValidPassword', 'Password must have over 6 characters');
+    		return false;
+    	}
+    }
+    
+    function isValidEmail() {
+    	$this->db->where('email', $this->input->post('email'));
+    	 
+    	$query = $this->db->get('customer');
+    	 
+    	if($query->num_rows() == 1){
+    		//found a user
+    		$this->form_validation->set_message('isValidEmail', 'Email already exist');
+    		return false;
+    	}
+    	
+    	if(filter_var($this->input->post('email'), FILTER_VALIDATE_EMAIL)
+    	&& preg_match('/@.+\./', $this->input->post('email'))){
+    		return true;	
+    	} else{
+    		$this->form_validation->set_message('isValidEmail', 'Incorrect email format');
+    		return false;
+    	}
+    }
+    
     function login_validation(){
     	
     	$this->load->library('form_validation');
-    	$this->form_validation->set_rules('login', 'Login', 'required|trim|xss_clean|callback_validate_credentials');
+    	$this->form_validation->set_rules('login', 'Login', 'required|trim|callback_validate_credentials');
     	$this->form_validation->set_rules('password', 'Password', 'required|trim');
     	
     	if ($this->form_validation->run()){
