@@ -20,11 +20,58 @@ class CandyStore extends CI_Controller {
     }
 
     function index() {
+    	if(!$this->session->userdata('is_logged_in')){
+    		$this->load->view('login_view');
+    	} else{
+    		if($this->session->userdata('login') == 'admin'){
+    			//admin view
+    		}
+    		else{
+    			//user view
+    		}
+    	}
+    	/*
     		$this->load->model('product_model');
     		$products = $this->product_model->getAll();
     		$data['products']=$products;
     		$this->load->view('product/list.php',$data);
+    */
     }
+    
+    function login_validation(){
+    	
+    	$this->load->library('form_validation');
+    	$this->form_validation->set_rules('login', 'Login', 'required|trim|xss_clean|callback_validate_credentials');
+    	$this->form_validation->set_rules('password', 'Password', 'required|md5|trim');
+    	
+    	if ($this->form_validation->run()){
+    		//session after all validations!
+    		$data = array(
+    			'login' => $this->input->post('login'),
+    			'is_logged_in' => 1
+    		);
+    		$this->session->set_userdata($data);
+    		redirect('candystore/members');
+    	}
+    	else{
+    		$this->load->view('login_view');
+    	}
+    }
+    
+    function validate_credentials(){
+    	$this->load->model('model_users');
+    	
+    	if($this->model_users->can_log_in()){
+    		//create SESSION data!!! =)
+    		
+    		return true;
+    	}
+    	else{
+    		$this->form_validation->set_message('validate_credentials', 'Incorrect username/password');
+    		return false;
+    	}
+    }
+    
     
     function newForm() {
 	    	$this->load->view('product/newForm.php');
