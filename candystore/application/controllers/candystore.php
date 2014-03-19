@@ -36,7 +36,7 @@ class CandyStore extends CI_Controller {
     				$data['there_is_admin'] = true;
     			}
     		}
-    		if ($data['there_is_admin'] != true){
+    		if ($data['there_is_admin'] !== true){
     			//create admin
     			$this->create_admin();
 
@@ -58,43 +58,28 @@ class CandyStore extends CI_Controller {
     		//login view
     		$this->load->view('login_view');
     	} else{
-    		if($this->session->userdata('login') == 'admin'){
+    		if($this->session->userdata['login'] == 'admin'){
     			//admin view
-    			$this->load->view('admin_view');
+
+    			$this->load->model('product_model');
+    			$products = $this->product_model->getAll();
+    			$data['products']=$products;
+    			$this->load->view('product/list.php',$data);
+    			
+    			//$this->load->view('admin_view');
     		}
     		else{
     			//user view
+    			$this->load->view('member_view');
     		}
     	}
-    	/*
-    		$this->load->model('product_model');
-    		$products = $this->product_model->getAll();
-    		$data['products']=$products;
-    		$this->load->view('product/list.php',$data);
-    */
-    }
-    
-    function create_admin() {
-    	$this->load->model('customer_model');
-    	
-    	$customer = new Customer();
-    	$customer->first = 'admin';
-    	$customer->last = 'admin';
-    	$customer->login = 'admin';
-    	$customer->password = md5('admin');
-    	$customer->email = 'admin@admin.com';
-    	 
-    	$data = $this->upload->data();
-    	 
-    	$this->customer_model->insert($customer);
-    	
     }
     
     function login_validation(){
     	
     	$this->load->library('form_validation');
     	$this->form_validation->set_rules('login', 'Login', 'required|trim|xss_clean|callback_validate_credentials');
-    	$this->form_validation->set_rules('password', 'Password', 'required|md5|trim');
+    	$this->form_validation->set_rules('password', 'Password', 'required|trim');
     	
     	if ($this->form_validation->run()){
     		//session after all validations!
@@ -103,7 +88,7 @@ class CandyStore extends CI_Controller {
     			'is_logged_in' => 1
     		);
     		$this->session->set_userdata($data);
-    		redirect('candystore/members');
+    		redirect('candystore/index');
     	}
     	else{
     		$this->load->view('login_view');
@@ -114,8 +99,7 @@ class CandyStore extends CI_Controller {
     	$this->load->model('model_users');
     	
     	if($this->model_users->can_log_in()){
-    		//create SESSION data!!! =)
-    		
+    		//create SESSION data, not sure if it's here though... 
     		return true;
     	}
     	else{
@@ -215,6 +199,26 @@ class CandyStore extends CI_Controller {
 		
 		//Then we redirect to the index page again
 		redirect('candystore/index', 'refresh');
+	}
+	
+
+	function create_admin() {
+		$this->load->model('customer_model');
+		 
+		$customer = new Customer();
+		$customer->first = 'admin';
+		$customer->last = 'admin';
+		$customer->login = 'admin';
+		$customer->password = 'admin';
+		$customer->email = 'admin@admin.com';
+	
+		$data = $this->upload->data();
+	
+		$this->customer_model->insert($customer);
+		
+		$this->session->sess_destroy();
+		
+		 
 	}
       
    
