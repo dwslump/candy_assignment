@@ -58,21 +58,21 @@ class CandyStore extends CI_Controller {
     		//login view
     		$this->load->view('login_view');
     	} else{
+    		$this->load->model('product_model');
+    		$products = $this->product_model->getAll();
+    		$data['products']=$products;
+    		
     		if($this->session->userdata['login'] == 'admin'){
     			//admin view
 
-    			$this->load->model('product_model');
-    			$products = $this->product_model->getAll();
-    			$data['products']=$products;
-    			$this->load->view('product/list.php',$data);
-    			
-    			//$this->load->view('admin_view');
+    			$this->load->view('admin_view',$data);
+    			 
     		}
     		else{
     			//user view
-    			$this->load->view('member_view');
+    			$this->load->view('member_view',$data);
     		}
-    	}
+    		}
     }
     
     function register_customer(){
@@ -89,9 +89,10 @@ class CandyStore extends CI_Controller {
     	$this->form_validation->set_rules('email', 'Email', 'required|trim|xss_clean|callback_isValidEmail');
 
     	if ($this->form_validation->run()){
-    		echo '<script language="javascript">';
+    		/*echo '<script language="javascript">';
     		echo 'alert("Registration Successfull!")';
     		echo '</script>';
+    		*/
     		
     		//create a new member:
     		$this->load->model('customer_model');
@@ -107,7 +108,7 @@ class CandyStore extends CI_Controller {
     		
     		$this->customer_model->insert($customer);
     		
-    		$this->session->sess_destroy();    		
+    		//$this->session->sess_destroy();    		
     		
     		redirect('candystore/index');
     	}
@@ -307,6 +308,11 @@ class CandyStore extends CI_Controller {
 		$this->session->sess_destroy();
 		
 		 
+	}
+	
+	public function logout() {
+		$this->session->sess_destroy();
+		redirect('candystore/index');
 	}
       
    
