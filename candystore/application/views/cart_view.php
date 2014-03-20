@@ -48,7 +48,7 @@
 		
 		<div id="bottom">
 <!-- 			<a href='javascript:history.back()' >Back</a><br> -->
-			<a href='<?php echo base_url()."candystore/member_view";?>' >Back</a><br>
+			<a href='<?php echo base_url()."candystore/index";?>' >Continue Shopping</a><br>
 			<a href='<?php echo base_url()."candystore/checkout";?>' >Checkout</a>
 		</div>
 	
