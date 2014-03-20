@@ -163,14 +163,18 @@ class CandyStore extends CI_Controller {
     				$new_cart_itens[$j] = serialize($order_item);
     			}
     			$product = $this->product_model->get($order_item->product_id);
-    			echo "<p> You've added " .$quanadded. " " . $product->name. " to the cart!</p>";
+    			echo '<script language="javascript">';
+    			echo 'alert("You\'ve added ' .$quanadded. ' ' .$product->name. ' to the cart!")';
+    			echo '</script>';
+    			//echo "<p> You've added " .$quanadded. " " . $product->name. " to the cart!</p>";
     		}
     	}
     	$this->session->set_userdata('user_cart',$new_cart_itens);
     	$prev = $this->session->userdata('cartTotal');
     	$this->session->set_userdata('cartTotal', $prev+($quanadded*$product->price));
-    	echo "<a href='javascript:history.back()' >Continue Shoping</a><br>";
-		echo "<a href=" .base_url(). "candystore/logout >Checkout</a>";   	
+    	//echo "<a href='javascript:history.back()' >Continue Shoping</a><br>";
+		//echo "<a href=" .base_url(). "candystore/checkout >Checkout</a>";
+		redirect('candystore/view_cart', 'refresh');   	
     }
     
     function view_cart(){
