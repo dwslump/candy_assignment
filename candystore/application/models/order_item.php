@@ -5,3 +5,4 @@ class Order_item  {
 	public $product_id;
 	public $quantity;
 }
+?>

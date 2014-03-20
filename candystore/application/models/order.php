@@ -9,3 +9,4 @@ class Order  {
 	public $creditcard_month;
 	public $creditcard_year;
 }
+?>

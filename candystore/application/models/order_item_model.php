@@ -8,11 +8,11 @@ class Order_item_model extends CI_Model {
 		return $query->result('Order_item');
 	}  
 	
-	function getProductFromOrderItem($id)
+	function get($id)
 	{
-		$query = $this->db->get_where('product',array('id' => $id));
+		$query = $this->db->get_where('order_item',array('id' => $id));
 		
-		return $query->row(0,'Product');
+		return $query->row(0,'Order_item');
 	}
 	
 	function delete($id) {
