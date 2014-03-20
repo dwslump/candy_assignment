@@ -133,7 +133,6 @@ class CandyStore extends CI_Controller {
     		$message = "<p>Thank you for your registration!</p>";
     				
     		$this->email->message($message);
-    		$this->email->send();
     		
     		//$this->session->sess_destroy();    		
     			
@@ -141,11 +140,9 @@ class CandyStore extends CI_Controller {
     		
     		if($this->email->send()){
     			echo "The confirmation email has been sent.";
-    			sleep(3);
     			redirect('candystore/index');
     		}else{
     			echo "Registration completed! However we could not send the confirmation email.";
-    			sleep(3);
     			redirect('candystore/index');
     		}
     		
@@ -280,6 +277,13 @@ class CandyStore extends CI_Controller {
 		$product = $this->product_model->get($id);
 		$data['product']=$product;
 		$this->load->view('product/read.php',$data);
+	}
+	
+	function readCustomerInfo($id) {
+		$this->load->model('customer_model');
+		$customer = $this->customer_model->get($id);
+		$data['customer']=$customer;
+		$this->load->view('customer/readCustomerInfo.php',$data);
 	}
 	
 	function editForm($id) {
