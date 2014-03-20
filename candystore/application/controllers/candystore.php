@@ -107,9 +107,6 @@ class CandyStore extends CI_Controller {
     		$cnumber = $this->input->post('cnumber');
     		$cmonth = $this->input->post('cmonth');
     		$cyear = $this->input->post('cyear');
-    	
-    		echo mdate($order_time, $time);
-    	
 	    	$newOrder = new Order();
     		$newOrder->customer_id = $this->session->userdata('user_id');
     		$newOrder->order_date = mdate($order_date, $time);

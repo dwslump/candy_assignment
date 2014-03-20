@@ -49,7 +49,7 @@
 	
 		
 <div id="body">
-		<p>Please, insert your payment data bellow to concluse your purchase.</p>
+		<p>Please, insert your payment data bellow to conclude your purchase.</p>
 	
 		<?php 
 		
