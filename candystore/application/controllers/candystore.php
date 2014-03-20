@@ -69,7 +69,6 @@ class CandyStore extends CI_Controller {
     			 
     		}
     		else{	
-    			//user view
     			$this->db->select('id')->from('customer')->where('login',$this->session->userdata['login']);
     			$query = $this->db->get();
     			if($query->num_rows() > 0){
@@ -77,6 +76,8 @@ class CandyStore extends CI_Controller {
     			}
     			
     			$this->session->set_userdata('user_id', $uid->id);
+
+    			//user view    
     			$this->load->view('member_view',$data);
     		}
     		}
@@ -280,11 +281,11 @@ class CandyStore extends CI_Controller {
     		return false;
     	}
     	else{
-    		if($this->input->post('cmonth') < 0 || $this->input->post('cmonth') > 12){
+    		if($this->input->post('cmonth') < 1 || $this->input->post('cmonth') > 12){
     			$this->form_validation->set_message('validateCreditCard', '<span>Incorrect Month in CreditCard data</span>');
     			return false;
     		}
-    		if($this->input->post('cyear') < 2013){
+    		if($this->input->post('cyear') < 2014){
     			$this->form_validation->set_message('validateCreditCard', '<span>Year must be over 2014!</span>');
     			return false;
     		}
