@@ -14,7 +14,7 @@ class CandyStore extends CI_Controller {
 	    	$config['max_width'] = '1024';
 	    	$config['max_height'] = '768';
 */
-	    		    	
+	    	$this->load->helper('date');
 	    	$this->load->library('upload', $config);
 	    	
     }
@@ -24,7 +24,7 @@ class CandyStore extends CI_Controller {
     	$customers = $this->customer_model->getAll();
     	$data['customers'] = $customers;
     	
-    	$query = $this->db->query('SELECT login FROM customer');
+    	$query = $this->db->query('SELECT login FROM customer');    	
     	
     	//verify if there is an admin in the database, if not we must create it.
     	//Why? -> because if someone registers an admin, we must return that already exists an admin and it cannot be created.
@@ -70,6 +70,13 @@ class CandyStore extends CI_Controller {
     		}
     		else{	
     			//user view
+    			$this->db->select('id')->from('customer')->where('login',$this->session->userdata['login']);
+    			$query = $this->db->get();
+    			if($query->num_rows() > 0){
+    				$uid = $query->row();
+    			}
+    			
+    			$this->session->set_userdata('user_id', $uid->id);
     			$this->load->view('member_view',$data);
     		}
     		}
@@ -212,7 +219,7 @@ class CandyStore extends CI_Controller {
     		//session after all validations!
     		$data = array(
     			'login' => $this->input->post('login'),
-    			'is_logged_in' => 1
+    			'is_logged_in' => 1,
     		);
     		$this->session->set_userdata($data);
     		redirect('candystore/index');

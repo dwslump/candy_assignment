@@ -11,16 +11,28 @@
 	<h1>Welcome to CandyStore</h1>
 </div>
 	<div id="body">
-		<p>Welcome back, <?php echo $this->session->userdata['login']?>!</p>
+		<p>Welcome back, <?php echo $this->session->userdata['login'] ?>!</p>
 		
 		<p>Let's buy some candy?</p>
 	
 		<?php 
+		$cart =  $this->session->userdata('user_cart');
+		$order_date = "%Y,%m,%d";		
+		$order_time = "%h:%i %a";
+		$time = time();
+			
+		if(!$cart){ // User has no order
+			$emptycart = array(
+					'cart_items'=>array()
+			);
+			$this->session->set_userdata('user_cart', $emptycart);
+		}
+		
 		
 		echo "<table>";
 		echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Photo</th></tr>";
 		
-		foreach ($products as $product) {
+		foreach ($order_items as $order_items) {
 			echo "<tr>";
 			echo "<td>" . $product->name . "</td>";
 			echo "<td>" . $product->description . "</td>";
@@ -37,6 +49,7 @@
 		</div>
 		
 		<div id="bottom">
+			<a href='<?php echo base_url()."candystore/logout";?>' >Logout</a>
 			<a href='<?php echo base_url()."candystore/logout";?>' >Logout</a>
 		</div>
 	
