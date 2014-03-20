@@ -135,6 +135,36 @@ class CandyStore extends CI_Controller {
     	
     }
     
+    function cart_delete(){
+    	$cart_items = $this->session->userdata('user_cart');
+    	$this->load->model('product_model');
+    	$i = 1;    	
+    	while(!$this->input->post('removeProduct'.$i)){$i++;}
+    	$todeleteID = $this->input->post('product_id'.$i);
+//     	echo var_dump($cart_items); 
+    	
+    	if (!$cart_items){
+	    	for ($i=0; $i <count($cart_items); $i++){
+	    		if (unserialize($cart_items[$i])->product_id == $todeleteID){    			
+	//     			$cart_items[$i] =end($cart_items);
+	    			$prev = $this->session->userdata('cartTotal');    			
+	//     			$prev = $prev - $cart_items[$i]->quantity*$this->product_model->get($todeleteID)->price; 
+	    			unset($cart_items[$i]);
+	    			$this->session->set_userdata('user_cart',$cart_items);
+	    			$this->session->set_userdata('cartTotal', $prev);
+	    			$this->load->view('cart_view');
+	    		}
+	    			
+	    	}
+    	}else{
+    		$emptycart = array();
+    		$this->session->set_userdata('user_cart', $emptycart);
+    		$this->session->set_userdata('cartTotal', 0);
+    		$this->load->view('cart_view');
+    	}
+    	
+    }
+    
     function member_view(){
     	$this->load->model('product_model');
     	$products = $this->product_model->getAll();
@@ -150,8 +180,6 @@ class CandyStore extends CI_Controller {
     	for ($i=1; $i <= $this->input->post('amount_products'); $i++){
     		if($this->input->post('product_quantity'.$i) != 0 && $this->input->post('submitProduct'.$i)){
     			$order_item = new Order_item();
-//     			$order_item->id = 0;
-//     			$order_item->order_id = 0;
     			$order_item->product_id = $this->input->post('product_id'.$i);
     			$order_item->quantity = $this->input->post('product_quantity'.$i);
 

@@ -3,7 +3,6 @@
 <head>
 	<meta charset="utf-8">
 	<title>CandyStore</title>
-
 </head>
 <body>
 
@@ -20,7 +19,8 @@
 		if(!$cart_items){ // Empty cart!
 			echo "<p>Your cart is empty!</p>";
 		}else{
-			
+			$counter=1;
+			echo form_open('candystore/cart_delete');
 			echo "<table>";
 			echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Image</th><th>Quantity</th></tr>";			
 			foreach ($cart_items as $order_item) {
@@ -33,8 +33,10 @@
 				echo "<td>" . $product->price . "</td>";
 				echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";
 				echo "<td>". $helper->quantity ."</td>";
+// 				echo "<td>" .form_submit('removeProduct'.$counter, 'Remove from cart'). "</td>";
 				echo "</tr>";
-				
+				echo form_hidden('product_id'.$counter,$product->id);
+				$counter++;
 			}
 			echo "<tr>";
 			echo "<td>Total: ". $this->session->userdata('cartTotal') ."</td>";
@@ -52,8 +54,5 @@
 			<a href='<?php echo base_url()."candystore/checkout";?>' >Checkout</a>
 		</div>
 		
-		
-	
-
 </body>
 </html>
