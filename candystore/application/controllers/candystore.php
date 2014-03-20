@@ -86,8 +86,42 @@ class CandyStore extends CI_Controller {
     	$this->load->view('register_view');
     }
     
-    function paynprint(){
-    	echo "CABOOO";
+    function finalize_purchase(){
+    	
+    	$this->load->model('order_model');
+    	$this->load->model('order_item_model');
+    	
+    	$order_date = "%Y,%m,%d";
+    	$order_time = "%h:%i %a";
+    	$time = time();
+    	
+    	$cnumber = $this->input->post('cnumber');
+    	$cmonth = $this->input->post('cmonth');
+    	$cyear = $this->input->post('cyear');
+    	
+    	echo mdate($order_time, $time);
+    	
+    	$newOrder = new Order();
+    	$newOrder->customer_id = $this->session->userdata('user_id');
+    	$newOrder->order_date = mdate($order_date, $time);
+    	$newOrder->order_time = mdate($order_time, $time);
+    	$newOrder->total = $this->session->userdata('cartTotal');
+    	$newOrder->creditcard_number = $cnumber;
+    	$newOrder->creditcard_month = $cmonth;
+    	$newOrder->creditcard_year = $cyear;
+    	
+    	$this->order_model->insert($newOrder);
+    	
+    	$orderID = $this->order_model->lastID();
+    	
+    	$orderItens = $this->session->userdata('user_cart');
+    	foreach ($orderItens as $orderItem){
+    		$dorder = unserialize($orderItem);
+    		$dorder->order_id = $orderID;
+    		$this->order_item_model->insert($dorder);
+    	}
+    	
+    	
     }
     
     function member_view(){
@@ -133,6 +167,8 @@ class CandyStore extends CI_Controller {
     		}
     	}
     	$this->session->set_userdata('user_cart',$new_cart_itens);
+    	$prev = $this->session->userdata('cartTotal');
+    	$this->session->set_userdata('cartTotal', $prev+($quanadded*$product->price));
     	echo "<a href='javascript:history.back()' >Continue Shoping</a><br>";
 		echo "<a href=" .base_url(). "candystore/logout >Checkout</a>";   	
     }

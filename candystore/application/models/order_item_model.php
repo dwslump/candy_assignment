@@ -25,20 +25,20 @@ class Order_item_model extends CI_Model {
 		return $this->db->delete("product",array('id' => $id ));
 	}
 	
-	function insert($product) {
-		return $this->db->insert("product", array('name' => $product->name,
-				                                  'description' => $product->description,
-											      'price' => $product->price,
-												  'photo_url' => $product->photo_url));
+	function insert($order_item) {
+		return $this->db->insert("order_item", array('order_id' => $order_item->order_id,
+				                                  'product_id' => $order_item->product_id,
+											      'quantity' => $order_item->quantity
+		));
 	}
 	 
-	function update($product) {
-		$this->db->where('id', $product->id);
-		return $this->db->update("product", array('name' => $product->name,
-				                                  'description' => $product->description,
-											      'price' => $product->price));
+	function update($order_item) {
+		$this->db->where('id', $order_item->id);
+		return $this->db->update("$order_item", array('order_id' => $order_item->order_id,
+				                                  'product_id' => $order_item->product_id,
+											      'quantity' => $order_item->quantity
+		));
+	
 	}
-	
-	
 }
 ?>

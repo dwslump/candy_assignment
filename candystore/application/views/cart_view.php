@@ -34,10 +34,10 @@
 				echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";
 				echo "<td>". $helper->quantity ."</td>";
 				echo "</tr>";
-				$total+=$helper->quantity * $product->price;
+				
 			}
 			echo "<tr>";
-			echo "<td>Total: ". $total ."</td>";
+			echo "<td>Total: ". $this->session->userdata('cartTotal') ."</td>";
 			echo "</tr>";
 			echo "<table>";	
 		}

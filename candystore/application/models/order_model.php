@@ -22,7 +22,11 @@ class Order_model extends CI_Model {
 	function delete($id) {
 		return $this->db->delete("order",array('id' => $id ));
 	}
-
+		
+	function lastID(){
+		return $this->db->insert_id();
+	}
+	
 	function insert($order) {
 		return $this->db->insert("order", array('customer_id' => $order->customer_id,
 				'order_date' => $order->order_date,

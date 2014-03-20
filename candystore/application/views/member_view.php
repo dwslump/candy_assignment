@@ -17,13 +17,12 @@
 		<a href='<?php echo base_url()."candystore/view_cart";?>' >View Cart</a>
 		<?php 
 		$cart =  $this->session->userdata('user_cart');
-		$order_date = "%Y,%m,%d";		
-		$order_time = "%h:%i %a";
-		$time = time();
 			
 		if(!$cart){ // User has no order
+			
 			$emptycart = array();
 			$this->session->set_userdata('user_cart', $emptycart);
+			$this->session->set_userdata('cartTotal', 0);
 		}
 		
 		echo form_open('candystore/cart_manager');
