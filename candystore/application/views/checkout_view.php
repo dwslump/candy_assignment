@@ -55,7 +55,7 @@
 		
  		echo form_open('candystore/finalize_purchase');
 		
-// 		echo validation_errors();
+ 		echo validation_errors();
 		
 		
 		
@@ -85,6 +85,11 @@
 <!-- 			<a href='javascript:history.back()' >Back</a><br> -->
 			<a href='<?php echo base_url()."candystore/view_cart";?>' >Change your Order</a><br>
 		</div>
+		
+		<div id="bottom">
+			<a href='<?php echo base_url()."candystore/logout";?>' >Logout</a>
+		</div>
+		
 	
 
 </body>

@@ -88,39 +88,52 @@ class CandyStore extends CI_Controller {
     
     function finalize_purchase(){
     	
-    	$this->load->model('order_model');
-    	$this->load->model('order_item_model');
     	
-    	$order_date = "%Y,%m,%d";
-    	$order_time = "%h:%i %a";
-    	$time = time();
+    	$this->load->library('form_validation');
+    	$this->form_validation->set_rules('cnumber', 'CreditCard Number', 'required|trim|callback_validateCreditCard');
+    	$this->form_validation->set_rules('cmonth', 'CreditCard Month', 'required|trim');
+    	$this->form_validation->set_rules('cyear', 'CreditCard Year', 'required|trim');
     	
-    	$cnumber = $this->input->post('cnumber');
-    	$cmonth = $this->input->post('cmonth');
-    	$cyear = $this->input->post('cyear');
+    	if ($this->form_validation->run()){
+    		 
     	
-    	echo mdate($order_time, $time);
+    		$this->load->model('order_model');
+    		$this->load->model('order_item_model');
     	
-    	$newOrder = new Order();
-    	$newOrder->customer_id = $this->session->userdata('user_id');
-    	$newOrder->order_date = mdate($order_date, $time);
-    	$newOrder->order_time = mdate($order_time, $time);
-    	$newOrder->total = $this->session->userdata('cartTotal');
-    	$newOrder->creditcard_number = $cnumber;
-    	$newOrder->creditcard_month = $cmonth;
-    	$newOrder->creditcard_year = $cyear;
+	    	$order_date = "%Y,%m,%d";
+    		$order_time = "%h:%i %a";
+    		$time = time();
     	
-    	$this->order_model->insert($newOrder);
+    		$cnumber = $this->input->post('cnumber');
+    		$cmonth = $this->input->post('cmonth');
+    		$cyear = $this->input->post('cyear');
     	
-    	$orderID = $this->order_model->lastID();
+    		echo mdate($order_time, $time);
     	
-    	$orderItens = $this->session->userdata('user_cart');
-    	foreach ($orderItens as $orderItem){
-    		$dorder = unserialize($orderItem);
-    		$dorder->order_id = $orderID;
-    		$this->order_item_model->insert($dorder);
+	    	$newOrder = new Order();
+    		$newOrder->customer_id = $this->session->userdata('user_id');
+    		$newOrder->order_date = mdate($order_date, $time);
+    		$newOrder->order_time = mdate($order_time, $time);
+    		$newOrder->total = $this->session->userdata('cartTotal');
+    		$newOrder->creditcard_number = $cnumber;
+    		$newOrder->creditcard_month = $cmonth;
+    		$newOrder->creditcard_year = $cyear;
+    	
+    		$this->order_model->insert($newOrder);
+	    	
+    		$orderID = $this->order_model->lastID();
+    	
+	    	$orderItens = $this->session->userdata('user_cart');
+    		foreach ($orderItens as $orderItem){
+    			$dorder = unserialize($orderItem);
+    			$dorder->order_id = $orderID;
+    			$this->order_item_model->insert($dorder);
+    		}
+    		$this->load->view('order_placed');
+    	} else{
+    		$this->load->view('checkout_view');
     	}
-    	
+	    	
     	
     }
     
@@ -258,6 +271,25 @@ class CandyStore extends CI_Controller {
     
     function registrationSucceded(){
     	$this->load->view('registerSuccess.php');
+    }
+    
+    
+    public function validateCreditCard() {
+    	if(strlen($this->input->post('cnumber')) < 16){
+    		$this->form_validation->set_message('validateCreditCard', '<span>Invalid CreditCard Number!</span>');
+    		return false;
+    	}
+    	else{
+    		if($this->input->post('cmonth') < 0 || $this->input->post('cmonth') > 12){
+    			$this->form_validation->set_message('validateCreditCard', '<span>Incorrect Month in CreditCard data</span>');
+    			return false;
+    		}
+    		if($this->input->post('cyear') < 2013){
+    			$this->form_validation->set_message('validateCreditCard', '<span>Year must be over 2014!</span>');
+    			return false;
+    		}
+    		return true;
+    	}
     }
     
     //verify if the login is valid for registration
@@ -570,6 +602,7 @@ class CandyStore extends CI_Controller {
 	public function isLoggedAsAdmin(){
 		return ($this->session->userdata('is_logged_in') && $this->session->userdata['login'] == 'admin');
 	}
+	
       
    
     public function checkout(){
