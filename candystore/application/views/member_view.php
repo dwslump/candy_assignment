@@ -29,6 +29,7 @@
 		echo "<table>";
 		echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Photo</th></tr>";
 		$counter=1;
+		$set_range = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 		foreach ($products as $product) {			
 			echo "<tr>";
 			echo form_hidden('product_id'.$counter,$product->id);
@@ -36,7 +37,7 @@
 			echo "<td>" . $product->description . "</td>";
 			echo "<td>" . $product->price . "</td>";
 			echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";			
-			echo "<td>Quantity: " .form_input('product_quantity'.$counter). "</td>";
+			echo "<td>Quantity: " .form_dropdown('product_quantity'.$counter, $set_range). "</td>";
 			echo "<td>" .form_submit('submitProduct'.$counter, 'Add to cart'). "</td>";			
 			echo "</tr>";
 			$counter++;
