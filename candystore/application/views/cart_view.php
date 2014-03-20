@@ -16,7 +16,7 @@
 		<?php 
 		$this->load->model('product_model');
 		$cart_items = $this->session->userdata('user_cart'); 
-		if($cart_items=='none'){ // Empty cart!
+		if(!$cart_items){ // Empty cart!
 			echo "<p>Your cart is empty!</p>";
 		}else{
 
