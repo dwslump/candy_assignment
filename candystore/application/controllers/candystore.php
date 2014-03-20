@@ -332,6 +332,16 @@ class CandyStore extends CI_Controller {
 		redirect('candystore/index', 'refresh');
 	}
 	
+	function delete_customer($id) {
+		$this->load->model('customer_model');
+	
+		if (isset($id))
+			$this->customer_model->delete($id);
+	
+		//Then we redirect to the index page again
+		redirect('candystore/index', 'refresh');
+	}
+	
 
 	function create_admin() {
 		$this->load->model('customer_model');

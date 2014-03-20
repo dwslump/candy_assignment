@@ -15,7 +15,9 @@ class Customer_model extends CI_Model {
 	}
 	
 	function delete($id) {
+		//we must delete all orders of this customer!!!
 		return $this->db->delete("customer",array('id' => $id ));
+		
 	}
 	
 	function insert($customer) {
