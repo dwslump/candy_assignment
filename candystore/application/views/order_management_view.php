@@ -35,6 +35,7 @@
 					}
 				}
 				echo "</td>";
+				echo "<td>";	
 				foreach($order_items as $order_item){
 					foreach($products_order as $product_order){
 						if($order_item->product_id == $product_order->id){
