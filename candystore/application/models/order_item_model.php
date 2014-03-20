@@ -6,30 +6,37 @@ class Order_item_model extends CI_Model {
 		$query = $this->db->get('order_item');
 		return $query->result('Order_item');
 	}  
+
+	function getAllFromOrder($id)
+	{  
+		$query = $this->db->get_where('order_item',array('order_id' => $id));
+		
+		return $query->result('Order_item');
+	}  
 	
 	function get($id)
 	{
 		$query = $this->db->get_where('order_item',array('id' => $id));
 		
-		return $query->row(0,'Order');
+		return $query->row(0,'Order_item');
 	}
 	
 	function delete($id) {
-		return $this->db->delete("order_item",array('id' => $id ));
-		//we must delete all order_items of this order!!!
+		return $this->db->delete("product",array('id' => $id ));
 	}
 	
-	function insert($order_item) {
-		return $this->db->insert("order_item", array('order_id' => $order_item->order_id,
-				                                 'product_id' => $order_item->product_id,
-				                                 'quantity' => $order_item->quantity));
+	function insert($product) {
+		return $this->db->insert("product", array('name' => $product->name,
+				                                  'description' => $product->description,
+											      'price' => $product->price,
+												  'photo_url' => $product->photo_url));
 	}
 	 
-	function update($order) {
-		$this->db->where('id', $order_item->id);
-		return $this->db->update("order_item", array('order_id' => $order_item->order_id,
-				                                 'product_id' => $order_item->product_id,
-				                                 'quantity' => $order_item->quantity));
+	function update($product) {
+		$this->db->where('id', $product->id);
+		return $this->db->update("product", array('name' => $product->name,
+				                                  'description' => $product->description,
+											      'price' => $product->price));
 	}
 	
 	

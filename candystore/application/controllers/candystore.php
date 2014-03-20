@@ -14,7 +14,7 @@ class CandyStore extends CI_Controller {
 	    	$config['max_width'] = '1024';
 	    	$config['max_height'] = '768';
 */
-	    		    	
+	    	$this->load->helper('date');
 	    	$this->load->library('upload', $config);
 	    	
     }
@@ -24,7 +24,7 @@ class CandyStore extends CI_Controller {
     	$customers = $this->customer_model->getAll();
     	$data['customers'] = $customers;
     	
-    	$query = $this->db->query('SELECT login FROM customer');
+    	$query = $this->db->query('SELECT login FROM customer');    	
     	
     	//verify if there is an admin in the database, if not we must create it.
     	//Why? -> because if someone registers an admin, we must return that already exists an admin and it cannot be created.
@@ -70,6 +70,13 @@ class CandyStore extends CI_Controller {
     		}
     		else{	
     			//user view
+    			$this->db->select('id')->from('customer')->where('login',$this->session->userdata['login']);
+    			$query = $this->db->get();
+    			if($query->num_rows() > 0){
+    				$uid = $query->row();
+    			}
+    			
+    			$this->session->set_userdata('user_id', $uid->id);
     			$this->load->view('member_view',$data);
     		}
     		}
@@ -77,6 +84,31 @@ class CandyStore extends CI_Controller {
     
     function register_customer(){
     	$this->load->view('register_view');
+    }
+   
+    function cart_manager(){
+    	$this->load->model('product_model');
+    	$cart_items = $this->session->userdata('user_cart');
+    	$new_cart_itens = $cart_items;
+    	for ($i=1; $i <= $this->input->post('amount_products'); $i++){
+    		if($this->input->post('product_quantity'.$i) != 0 && $this->input->post('submitProduct'.$i)){
+    			$order_item = new Order_item();
+//     			$order_item->id = 0;
+//     			$order_item->order_id = 0;
+    			$order_item->product_id = $this->input->post('product_id'.$i);
+    			$order_item->quantity = $this->input->post('product_quantity'.$i);
+    			array_push($new_cart_itens,serialize($order_item));    			
+    			$product = $this->product_model->get($order_item->product_id);
+    			echo "<p> You've added " .$order_item->quantity. " " . $product->name. " to the cart!</p>";
+    		}
+    	} 
+    	$this->session->set_userdata('user_cart',$new_cart_itens);
+    	echo "<a href='javascript:history.back()' >Continue Shoping</a><br>";
+		echo "<a href=" .base_url(). "candystore/logout >Checkout</a>";   	
+    }
+    
+    function view_cart(){
+    	$this->load->view('cart_view');
     }
     
     //verify if the registration is valid
@@ -218,7 +250,7 @@ class CandyStore extends CI_Controller {
     		//session after all validations!
     		$data = array(
     			'login' => $this->input->post('login'),
-    			'is_logged_in' => 1
+    			'is_logged_in' => 1,
     		);
     		$this->session->set_userdata($data);
     		redirect('candystore/index');
