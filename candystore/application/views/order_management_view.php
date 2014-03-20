@@ -19,17 +19,18 @@
 			echo "<p>" . anchor('candystore/index','Back') . "</p>";
 		
 			echo "<table>";
-			echo "<tr><th>Order Date</th><th>Order Time</th><th>Total</th><th>Products</th><th>Quantity</th></tr>";
+			echo "<tr><th>Order ID<tr><th>Order Date</th><th>Order Time</th><th>Total</th><th>Products</th><th>Quantity</th></tr>";
 				
 			foreach ($orders as $order) {
 				echo "<tr>";
+				echo "<td>" . $order->id . "</td>";
 				echo "<td>" . $order->order_date . "</td>";
 				echo "<td>" . $order->order_time . "</td>";
 				echo "<td>" . $order->total . "</td>";
 				echo "<td>";
 				foreach($order_items as $order_item){
 					foreach($products_order as $product_order){
-						if($order_item->product_id == $product_order->id){
+						if(($order_item->product_id == $product_order->id) and ($order->id == $order_item->order_id)){
 							echo $product_order->name ."<br>";
 						}
 					}
@@ -38,7 +39,7 @@
 				echo "<td>";	
 				foreach($order_items as $order_item){
 					foreach($products_order as $product_order){
-						if($order_item->product_id == $product_order->id){
+						if(($order_item->product_id == $product_order->id) and ($order->id == $order_item->order_id)){
 							echo $order_item->quantity ."<br>";
 						}
 					}

@@ -559,17 +559,12 @@ class CandyStore extends CI_Controller {
 			$orders = $query->result('Order');
 			$data['orders']= $orders;
 			
-			//getting the order_items from the orders above:
+			//getting the order_items from all orders
 			$this->load->model('order_item_model');
-			$order_items = array();
-			$data['order_items'] = array();
-			foreach($orders as $order){
-				$query = $this->db->get_where('order_item', array('order_id' => $order->id));
-				$order_items = $query->result('Order_item');
-				$data['order_items'] = $order_items;
-			}
+			$order_items = $this->order_item_model->getAll();
+			$data['order_items'] = $order_items;
 			
-			//getting the products of the order_items above:
+			//getting all products:
 			$this->load->model('product_model');
 			$products_order = $this->product_model->getAll();
 			$data['products_order'] = $products_order;
