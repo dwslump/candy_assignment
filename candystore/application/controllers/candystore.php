@@ -141,10 +141,10 @@ class CandyStore extends CI_Controller {
     		
     		if($this->email->send()){
     			echo "The confirmation email has been sent.";
-    			redirect('candystore/index');
+    			redirect('candystore/registrationSucceded');
     		}else{
     			echo "Registration completed! However we could not send the confirmation email.";
-    			redirect('candystore/index');
+    			redirect('candystore/registrationSucceded');
     		}
     		
     	}
@@ -152,6 +152,10 @@ class CandyStore extends CI_Controller {
     		$this->load->view('register_view');
     	}
     	
+    }
+    
+    function registrationSucceded(){
+    	$this->load->view('registerSuccess.php');
     }
     
     //verify if the login is valid for registration
@@ -162,7 +166,7 @@ class CandyStore extends CI_Controller {
     	
     	if($query->num_rows() == 1){
     		//found a user
-    		$this->form_validation->set_message('isValidLogin', 'Login already exist');
+    		$this->form_validation->set_message('isValidLogin', '<span>Login already exist</span>');
     		return false;
     	}
     	else{
@@ -177,7 +181,7 @@ class CandyStore extends CI_Controller {
     	if(strlen($this->input->post('password')) > 5){
     		return true;
     	} else{
-    		$this->form_validation->set_message('isValidPassword', 'Password must have over 6 characters');
+    		$this->form_validation->set_message('isValidPassword', '<span>Password must have over 6 characters</span>');
     		return false;
     	}
     }
@@ -190,7 +194,7 @@ class CandyStore extends CI_Controller {
     	 
     	if($query->num_rows() == 1){
     		//found a user
-    		$this->form_validation->set_message('isValidEmail', 'Email already exist');
+    		$this->form_validation->set_message('isValidEmail', '<span>Email already exist</span>');
     		return false;
     	}
     	
@@ -198,7 +202,7 @@ class CandyStore extends CI_Controller {
     	&& preg_match('/@.+\./', $this->input->post('email'))){
     		return true;	
     	} else{
-    		$this->form_validation->set_message('isValidEmail', 'Incorrect email format');
+    		$this->form_validation->set_message('isValidEmail', '<span>Incorrect email format</span>');
     		return false;
     	}
     }
@@ -233,7 +237,7 @@ class CandyStore extends CI_Controller {
     		return true;
     	}
     	else{
-    		$this->form_validation->set_message('validate_credentials', 'Incorrect username/password');
+    		$this->form_validation->set_message('validate_credentials', '<span>Incorrect username/password</span>');
     		return false;
     	}
     }
