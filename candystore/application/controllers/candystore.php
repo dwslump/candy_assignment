@@ -68,7 +68,7 @@ class CandyStore extends CI_Controller {
     			$this->load->view('admin_view',$data);
     			 
     		}
-    		else{
+    		else{	
     			//user view
     			$this->load->view('member_view',$data);
     		}
@@ -108,9 +108,47 @@ class CandyStore extends CI_Controller {
     		
     		$this->customer_model->insert($customer);
     		
-    		//$this->session->sess_destroy();    		
+    		//send e-mail to customer:
+
+    		$config = Array(
+    				'protocol' => 'smtp',
+    				'smtp_host' => 'ssl://smtp.gmail.com',
+    				'smtp_port' => 465,
+    				'smtp_user' => 'csc309assignment2@gmail.com',
+    				'smtp_pass' => 'candystore309',
+    				'mailtype' => 'html',
+    				'charset' => 'iso-8859-1',
+    				'crlf' => "\r\n",
+    				'newline' => "\r\n"
+    		);
+    		$this->load->library('email');
+    		$this->load->model('model_users');
     		
-    		redirect('candystore/index');
+    		$this->email->initialize($config);
+    		
+    		$this->email->from('csc309assignment2@gmail.com', 'CandyStore');
+    		$this->email->to($this->input->post('email'));
+    		$this->email->subject("Confirm your account");
+    		
+    		$message = "<p>Thank you for your registration!</p>";
+    				
+    		$this->email->message($message);
+    		$this->email->send();
+    		
+    		//$this->session->sess_destroy();    		
+    			
+    	//	redirect('candystore/index');
+    		
+    		if($this->email->send()){
+    			echo "The confirmation email has been sent.";
+    			sleep(3);
+    			redirect('candystore/index');
+    		}else{
+    			echo "Registration completed! However we could not send the confirmation email.";
+    			sleep(3);
+    			redirect('candystore/index');
+    		}
+    		
     	}
     	else{
     		$this->load->view('register_view');

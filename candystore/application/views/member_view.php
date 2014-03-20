@@ -16,8 +16,7 @@
 		<p>Let's buy some candy?</p>
 	
 		<?php 
-		echo "<p>" . anchor('candystore/newForm','Add New') . "</p>";
- 	  
+		
 		echo "<table>";
 		echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Photo</th></tr>";
 		
