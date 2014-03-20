@@ -59,7 +59,6 @@
 				echo "<td>" . $customer->email . "</td>";
 		
 				echo "<td>" . anchor("candystore/delete_customer/$customer->id",'Delete',"onClick='return confirm(\"Do you really want to delete this customer?\");'") . "</td>";
-				echo "<td>" . anchor("candystore/editCustomerForm/$customer->id",'Edit') . "</td>";
 				echo "<td>" . anchor("candystore/readCustomerInfo/$customer->id",'View') . "</td>";
 				echo "<td>" . anchor("candystore/orderManager/$customer->id", 'Order Management') . "</td>";
 		

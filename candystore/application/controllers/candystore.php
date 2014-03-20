@@ -79,6 +79,7 @@ class CandyStore extends CI_Controller {
     	$this->load->view('register_view');
     }
     
+    //verify if the registration is valid
     function register_validation(){
     	
     	$this->load->library('form_validation');
@@ -153,6 +154,7 @@ class CandyStore extends CI_Controller {
     	
     }
     
+    //verify if the login is valid for registration
     function isValidLogin() {
     	$this->db->where('login', $this->input->post('login'));
     	
@@ -169,7 +171,8 @@ class CandyStore extends CI_Controller {
     	}
     	 
     }
-    
+
+    //verify if the password is valid for registration
     function isValidPassword() {
     	if(strlen($this->input->post('password')) > 5){
     		return true;
@@ -179,6 +182,7 @@ class CandyStore extends CI_Controller {
     	}
     }
     
+    //verify if the email is valid for registration
     function isValidEmail() {
     	$this->db->where('email', $this->input->post('email'));
     	 
@@ -199,6 +203,7 @@ class CandyStore extends CI_Controller {
     	}
     }
     
+    //validation of login
     function login_validation(){
     	
     	$this->load->library('form_validation');
@@ -219,6 +224,7 @@ class CandyStore extends CI_Controller {
     	}
     }
     
+    //validation of login credentials
     function validate_credentials(){
     	$this->load->model('model_users');
     	
@@ -234,44 +240,55 @@ class CandyStore extends CI_Controller {
     
     
     function newForm() {
+    	if($this->isLoggedAsAdmin()){
 	    	$this->load->view('product/newForm.php');
+    	}
+    	else{
+    		$this->load->view('access_denied_view');
+    	}
     }
     
+    //creation of new product in the database
 	function create() {
-		$this->load->library('form_validation');
-		$this->form_validation->set_rules('name','Name','required|is_unique[product.name]');
-		$this->form_validation->set_rules('description','Description','required');
-		$this->form_validation->set_rules('price','Price','required');
+		if($this->isLoggedAsAdmin()){
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('name','Name','required|is_unique[product.name]');
+			$this->form_validation->set_rules('description','Description','required');
+			$this->form_validation->set_rules('price','Price','required');
 		
-		$fileUploadSuccess = $this->upload->do_upload();
-		
-		if ($this->form_validation->run() == true && $fileUploadSuccess) {
-			$this->load->model('product_model');
-
-			$product = new Product();
-			$product->name = $this->input->get_post('name');
-			$product->description = $this->input->get_post('description');
-			$product->price = $this->input->get_post('price');
+			$fileUploadSuccess = $this->upload->do_upload();
 			
-			$data = $this->upload->data();
-			$product->photo_url = $data['file_name'];
-			
-			$this->product_model->insert($product);
-
-			//Then we redirect to the index page again
-			redirect('candystore/index', 'refresh');
-		}
-		else {
-			if ( !$fileUploadSuccess) {
-				$data['fileerror'] = $this->upload->display_errors();
-				$this->load->view('product/newForm.php',$data);
-				return;
+			if ($this->form_validation->run() == true && $fileUploadSuccess) {
+				$this->load->model('product_model');
+	
+				$product = new Product();
+				$product->name = $this->input->get_post('name');
+				$product->description = $this->input->get_post('description');
+				$product->price = $this->input->get_post('price');
+				
+				$data = $this->upload->data();
+				$product->photo_url = $data['file_name'];
+				
+				$this->product_model->insert($product);
+	
+				//	Then we redirect to the index page again
+				redirect('candystore/index', 'refresh');
 			}
-			
-			$this->load->view('product/newForm.php');
+			else {
+				if ( !$fileUploadSuccess) {
+					$data['fileerror'] = $this->upload->display_errors();
+					$this->load->view('product/newForm.php',$data);
+					return;
+				}
+				
+				$this->load->view('product/newForm.php');
+			}
+		} else{
+			$this->load->view('access_denied_view');
 		}	
 	}
 	
+	//visualization of products
 	function read($id) {
 		$this->load->model('product_model');
 		$product = $this->product_model->get($id);
@@ -279,70 +296,103 @@ class CandyStore extends CI_Controller {
 		$this->load->view('product/read.php',$data);
 	}
 	
+	//visualization of customers
 	function readCustomerInfo($id) {
-		$this->load->model('customer_model');
-		$customer = $this->customer_model->get($id);
-		$data['customer']=$customer;
-		$this->load->view('customer/readCustomerInfo.php',$data);
-	}
-	
-	function editForm($id) {
-		$this->load->model('product_model');
-		$product = $this->product_model->get($id);
-		$data['product']=$product;
-		$this->load->view('product/editForm.php',$data);
-	}
-	
-	function update($id) {
-		$this->load->library('form_validation');
-		$this->form_validation->set_rules('name','Name','required');
-		$this->form_validation->set_rules('description','Description','required');
-		$this->form_validation->set_rules('price','Price','required');
-		
-		if ($this->form_validation->run() == true) {
-			$product = new Product();
-			$product->id = $id;
-			$product->name = $this->input->get_post('name');
-			$product->description = $this->input->get_post('description');
-			$product->price = $this->input->get_post('price');
-			
-			$this->load->model('product_model');
-			$this->product_model->update($product);
-			//Then we redirect to the index page again
-			redirect('candystore/index', 'refresh');
+		if($this->isLoggedAsAdmin()){
+			$this->load->model('customer_model');
+			$customer = $this->customer_model->get($id);
+			$data['customer']=$customer;
+			$this->load->view('customer/readCustomerInfo.php',$data);
 		}
-		else {
-			$product = new Product();
-			$product->id = $id;
-			$product->name = set_value('name');
-			$product->description = set_value('description');
-			$product->price = set_value('price');
+		else{
+			$this->load->view('access_denied_view');
+		}
+		}
+	
+	//edit product
+	function editForm($id) {
+		if($this->isLoggedAsAdmin()){
+			$this->load->model('product_model');
+			$product = $this->product_model->get($id);
 			$data['product']=$product;
 			$this->load->view('product/editForm.php',$data);
 		}
+		else{
+			$this->load->view('access_denied_view');
+		}
+	}
+	
+	//update a product in the database
+	function update($id) {
+		if($this->isLoggedAsAdmin()){
+		
+			$this->load->library('form_validation');
+			$this->form_validation->set_rules('name','Name','required');
+			$this->form_validation->set_rules('description','Description','required');
+			$this->form_validation->set_rules('price','Price','required');
+		
+			if ($this->form_validation->run() == true) {
+				$product = new Product();
+				$product->id = $id;
+				$product->name = $this->input->get_post('name');
+				$product->description = $this->input->get_post('description');
+				$product->price = $this->input->get_post('price');
+				
+				$this->load->model('product_model');
+				$this->product_model->update($product);
+				//Then we redirect to the index page again
+				redirect('candystore/index', 'refresh');
+			}
+			else {
+				$product = new Product();
+				$product->id = $id;
+				$product->name = set_value('name');
+				$product->description = set_value('description');
+				$product->price = set_value('price');
+				$data['product']=$product;
+				$this->load->view('product/editForm.php',$data);
+			}
+		}
+		else{
+			$this->load->view('access_denied_view');
+		}
 	}
     	
+	//delete a product in the database
 	function delete($id) {
-		$this->load->model('product_model');
+		if($this->isLoggedAsAdmin()){
 		
-		if (isset($id)) 
-			$this->product_model->delete($id);
+			$this->load->model('product_model');
 		
-		//Then we redirect to the index page again
-		redirect('candystore/index', 'refresh');
+			if (isset($id)) 
+				$this->product_model->delete($id);
+		
+			//Then we redirect to the index page again
+			redirect('candystore/index', 'refresh');
+		}
+		else{
+			$this->load->view('access_denied_view');
+		}
 	}
 	
+	//delete a customer
 	function delete_customer($id) {
-		$this->load->model('customer_model');
+		if($this->isLoggedAsAdmin()){
+		
+			$this->load->model('customer_model');
 	
-		if (isset($id))
-			$this->customer_model->delete($id);
+			if (isset($id))
+				$this->customer_model->delete($id);
 	
-		//Then we redirect to the index page again
-		redirect('candystore/index', 'refresh');
+			//Then we redirect to the index page again
+			redirect('candystore/index', 'refresh');
+		}
+		else{
+			$this->load->view('access_denied_view');
+		}
 	}
 	
-
+	//creation of admin if does not exist in the database
 	function create_admin() {
 		$this->load->model('customer_model');
 		 
@@ -362,9 +412,39 @@ class CandyStore extends CI_Controller {
 		 
 	}
 	
+	function orderManager($id) {
+		if($this->isLoggedAsAdmin()){
+			$this->load->model('order_model');
+
+			$query = $this->db->get_where('order', array('customer_id' => $id));
+			$orders = $query->result('Order');
+			$data['orders']= $orders;
+		
+			$this->load->view('order_management_view', $data);
+		}
+		else{
+			$this->load->view('access_denied_view');
+		}
+	}
+	
+	function delete_order($id){
+		$this->load->model('order_model');
+		
+		if (isset($id))
+			$this->order_model->delete($id);
+		
+		//Then we redirect to the page again
+		redirect($_SERVER['REQUEST_URI'], 'refresh'); 
+	}
+	
+	//logout function
 	public function logout() {
 		$this->session->sess_destroy();
 		redirect('candystore/index');
+	}
+	
+	public function isLoggedAsAdmin(){
+		return ($this->session->userdata('is_logged_in') && $this->session->userdata['login'] == 'admin');
 	}
       
    

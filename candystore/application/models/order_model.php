@@ -10,7 +10,6 @@ class Order_model extends CI_Model {
 	function get($id)
 	{
 		$query = $this->db->get_where('order',array('id' => $id));
-		
 		return $query->row(0,'Order');
 	}
 	
