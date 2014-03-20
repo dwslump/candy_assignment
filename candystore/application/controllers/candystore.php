@@ -419,6 +419,23 @@ class CandyStore extends CI_Controller {
 			$query = $this->db->get_where('order', array('customer_id' => $id));
 			$orders = $query->result('Order');
 			$data['orders']= $orders;
+			
+			//getting the order_items from the orders above:
+			$this->load->model('order_item_model');
+			$order_items = array();
+			foreach($orders as $order){
+				$query = $this->db->get_where('order_item', array('order_id' => $order->order_id));
+				$order_items[] = $query->result('Order_item');
+			}
+			$data['order_items'] = $order_items;
+			
+			//getting the products of the order_items above:
+			$products_order = array();
+			foreach($order_items as $order_item){
+				$query = $this->db->get_where('product', array('id' => $order_item->product_id));
+				$products_order[] = $query->result('Products');
+			}
+			$data['products_order'] = $products_order;
 		
 			$this->load->view('order_management_view', $data);
 		}
@@ -427,6 +444,7 @@ class CandyStore extends CI_Controller {
 		}
 	}
 	
+	//delete the order with id
 	function delete_order($id){
 		$this->load->model('order_model');
 		
@@ -436,6 +454,8 @@ class CandyStore extends CI_Controller {
 		//Then we redirect to the page again
 		redirect($_SERVER['REQUEST_URI'], 'refresh'); 
 	}
+	
+	
 	
 	//logout function
 	public function logout() {

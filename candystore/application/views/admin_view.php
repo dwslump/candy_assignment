@@ -36,7 +36,7 @@
 				
 			echo "</tr>";
 		}
-		echo "<table>";
+		echo "</table>";
 		
 		?>
 		
@@ -65,7 +65,7 @@
 				echo "</tr>";
 			}
 		}
-		echo "<table>";
+		echo "</table>";
 		
 		
 		
