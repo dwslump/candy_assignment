@@ -25,8 +25,9 @@
 			echo "<td>" . $product->name . "</td>";
 			echo "<td>" . $product->description . "</td>";
 			echo "<td>" . $product->price . "</td>";
-			echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";
-				
+			echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";			
+			echo "<td>Quantity: <input type='text' name='quantity'></td>";
+			echo "<td><button type='button'>Add to cart</button></td>";	
 			echo "</tr>";
 		}
 		echo "<table>";
