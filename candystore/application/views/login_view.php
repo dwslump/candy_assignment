@@ -1,46 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>CandyStore</title>
-
-</head>
-<body>
-
-<div>
-	<h1>Welcome to CandyStore</h1>
-</div>
+<?php include('inc/header.php'); ?>
 	<div id="body">
-		<p>To have access to the Candystore you must be logged in.</p>
-	
-		<?php 
-		
-		echo form_open('candystore/login_validation');
-		
-		echo validation_errors();
-		
-		echo "<p>Login ";
-		echo form_input('login');
-		echo "</p>";
+		<h1>Welcome to Candy Store &reg; Shop Center</h1>
+		<h3>To have access to the Candystore you must be logged in.</h3>
+		<div class="login">
+			<?php 
+			
+			echo form_open('candystore/login_validation');
+			
+			echo validation_errors();
+			
+			echo "<p>Login <br>";
+			echo form_input('login');
+			echo "</p>";
 
-		echo "<p>Password ";
-		echo form_password('password');
-		echo "</p>";
+			echo "<p>Password <br>";
+			echo form_password('password');
+			echo "</p>";
+			
+			echo "<p>";
+			echo form_submit('login_submit', 'Login');
+			echo "</p>";
+			
+			echo form_close();
+			
+			?>
 		
-		echo "<p>";
-		echo form_submit('login_submit', 'Login');
-		echo "</p>";
-		
-		echo form_close();
-		
-		?>
-		
-	</div>
-	
-	<div id="body">
-	<p>Not a member? <a href= '<?php echo base_url()."candystore/register_customer" ?>'>Register</a></p>
+		</div>
+	<sub>Not a member? <a href= '<?php echo base_url()."candystore/register_customer" ?>'><span>Register</span></a></sub>
 	
 	</div>
-
-</body>
-</html>
+<?php include('inc/footer.php'); ?>

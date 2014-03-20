@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>CandyStore</title>
-
-</head>
-<body>
-
-<div>
-	<h1>Welcome to CandyStore</h1>
-</div>
+<?php include('inc/header.php') ?>
 	<div id="body">
-		<p>Welcome back, <?php echo $this->session->userdata['login'] ?>!</p>
-		
-		<p>Let's buy some candy?</p>
-		<a href='<?php echo base_url()."candystore/view_cart";?>' >View Cart</a>
+		<h2>Let's buy some candy?</h2>
+		<a href='<?php echo base_url()."candystore/view_cart";?>' ><span id="button">View Cart</span></a>
 		<?php 
 		$cart =  $this->session->userdata('user_cart');
 			
@@ -26,8 +13,8 @@
 		}
 		
 		echo form_open('candystore/cart_manager');
-		echo "<table>";
-		echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Photo</th></tr>";
+		echo "<table class='table'>";
+		echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Photo</th><th colspan='2'></th></tr>";
 		$counter=1;
 		$set_range = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 		foreach ($products as $product) {			
@@ -42,17 +29,14 @@
 			echo "</tr>";
 			$counter++;
 		}
-		echo "<table>";
+		echo "</table>";
 		echo form_hidden('amount_products',$counter-1);
 		echo form_close();
 		?>
 		
-		</div>
+	</div>
 		
-		<div id="bottom">			
-			<a href='<?php echo base_url()."candystore/logout";?>' >Logout</a>
-		</div>
-	
-
-</body>
-</html>
+	<div id="bottom">			
+		<a href='<?php echo base_url()."candystore/logout";?>' ><span id="button">Logout</span></a>
+	</div>
+<?php include('inc/footer.php') ?>

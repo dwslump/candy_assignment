@@ -1,3 +1,4 @@
+<?php include('inc/header.php'); ?>
 <h2>New Product</h2>
 
 <style>
@@ -6,8 +7,9 @@
 </style>
 
 <?php 
-	echo "<p>" . anchor('candystore/index','Back') . "</p>";
+	echo "<p>" . anchor('candystore/index','<span id="button">Back</span>') . "</p>";
 	
+	echo '<div class="login">';
 	echo form_open_multipart('candystore/create');
 		
 	echo form_label('Name'); 
@@ -33,5 +35,7 @@
 	
 	echo form_submit('submit', 'Create');
 	echo form_close();
+	echo "</div>";
 ?>	
 
+<?php include('inc/footer.php'); ?>

@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>CandyStore</title>
-</head>
-<body>
-
-<div>
-	<h1>Welcome to CandyStore</h1>
-</div>
+<?php include('inc/header.php'); ?>
 	<div id="body">
-		<p>Hello <?php echo $this->session->userdata['login'] ?>, this is your cart:</p>			
+		<h3>Hello <b><?php echo $this->session->userdata['login'] ?></b>, this is your cart:</h3>			
 	
 		<?php 
 		$this->load->model('product_model');
@@ -19,9 +9,8 @@
 		if(!$cart_items){ // Empty cart!
 			echo "<p>Your cart is empty!</p>";
 		}else{
-			$counter=1;
-			echo form_open('candystore/cart_delete');
-			echo "<table>";
+			
+			echo "<table class='table'>";
 			echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Image</th><th>Quantity</th></tr>";			
 			foreach ($cart_items as $order_item) {
 				$helper = unserialize($order_item);
@@ -33,15 +22,13 @@
 				echo "<td>" . $product->price . "</td>";
 				echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";
 				echo "<td>". $helper->quantity ."</td>";
-// 				echo "<td>" .form_submit('removeProduct'.$counter, 'Remove from cart'). "</td>";
 				echo "</tr>";
-				echo form_hidden('product_id'.$counter,$product->id);
-				$counter++;
+				
 			}
 			echo "<tr>";
-			echo "<td>Total: ". $this->session->userdata('cartTotal') ."</td>";
+			echo "<td colspan='5'>Total Amount: $". $this->session->userdata('cartTotal') ."</td>";
 			echo "</tr>";
-			echo "<table>";	
+			echo "</table>";	
 		}
 		
 		?>
@@ -50,9 +37,8 @@
 		
 		<div id="bottom">
 <!-- 			<a href='javascript:history.back()' >Back</a><br> -->
-			<a href='<?php echo base_url()."candystore/index";?>' >Continue Shopping</a><br>
-			<a href='<?php echo base_url()."candystore/checkout";?>' >Checkout</a>
+			<a href='<?php echo base_url()."candystore/index";?>' ><span id="button">Continue Shopping</span></a>
+			<a href='<?php echo base_url()."candystore/checkout";?>' ><span id="button">Checkout</span></a>
 		</div>
-		
-</body>
-</html>
+
+<?php include('inc/footer.php'); ?>

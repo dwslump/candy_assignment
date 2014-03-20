@@ -3,28 +3,26 @@
 <head>
 	<meta charset="utf-8">
 	<title>CandyStore</title>
-    <script type="text/javascript" src="<?php echo base_url();?>js/print.js" ></script>
 </head>
 <body>
-
-<div>
-	<h1>Order Recipt</h1>
-</div>
 	<div id="body">
+		<h1>Order Receipt</h1>
 		<p><?php
 		$query = $this->db->get_where('customer',array('id' => $this->session->userdata('user_id')));		
 		$row = $query->row();
 		$usrF = $row->first;
 		$usrL = $row->last;
-		echo "Buyer: " .$usrL. ", ".$usrF.".";
+		echo "<table class='table'>";
+		echo "<tr><td>Buyer: " .$usrL. ", ".$usrF.".</td>";
 		$order_date = "%Y,%m,%d";
 		$order_time = "%h:%i %a";
 		$time = time();
-		echo " Order placed at ".mdate($order_time, $time)." on ".mdate($order_date, $time);
+		echo "<td>Order placed at ".mdate($order_time, $time)." on ".mdate($order_date, $time) . "</td></tr>";
+		echo "</table>";
 // 		echo var_dump($query); 
 		?>.</p>
 		
-		<p>Order:</p>			
+		<tr><p>Order:</p></tr>			
 	
 		<?php 
 		$this->load->model('product_model');
@@ -33,7 +31,7 @@
 		if(!$cart_items){ // Empty cart!
 			echo "<p>Your cart is empty!</p>";
 		}else{			
-			echo "<table>";
+			echo "<table class='table'>";
 			echo "<tr><th>Name</th><th>Price Un. </th><th>Quantity</th><th>Price Total</th></tr>";			
 			foreach ($cart_items as $order_item) {
 				$helper = unserialize($order_item);
@@ -48,7 +46,7 @@
 				
 			}
 			echo "<tr>";
-			echo "<td>Total ". $this->session->userdata('cartTotal') ."</td>";
+			echo "<td colspan='4'>Total Amount: $". $this->session->userdata('cartTotal') ."</td>";
 			echo "</tr>";
 			echo "<table>";	
 		}
@@ -58,7 +56,6 @@
 		
 		?>
 		</div>
-	
 		<form>
 		<input type=button value="Print"
 		onClick="window.print()">
@@ -66,8 +63,8 @@
 		
 		
 		<div id="bottom">
-			<p>Thanks for buying! You must login again if you want to place another order.</p>
-			<a href='<?php echo base_url()."candystore/logout";?>' >Login</a>
+			<div class="table"><p>Thanks for buying! You must login again if you want to place another order.</p></div>
+			<a href='<?php echo base_url()."candystore/logout";?>' ><span id="button">Login</span></a>
 		</div>
 		
 	

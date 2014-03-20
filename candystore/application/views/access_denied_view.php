@@ -1,23 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>CandyStore</title>
-
-</head>
-<body>
-
-<div>
-	<h1>ACCESS DENIED!!!</h1>
-</div>
+<?php include('inc/header.php') ?>
 	<div id="body">
+		<h1>ACCESS DENIED!!!</h1>
+		<img id="denied" src='<?php echo base_url() . "images/denied.jpg"; ?>'>
 		<p>I'm sorry, but you don't have permission to access this.</p>
 		
 		<?php
-			echo "<p>" . anchor('candystore/index','Let\'s go to index eh?') . "</p>";
+			echo "<p>" . anchor('candystore/index','<span id="button">Let\'s go to index eh?</span>') . "</p>";
 		?>
 		
-		</div>
-
-</body>
-</html>
+	</div>
+<?php include('inc/footer.php') ?>

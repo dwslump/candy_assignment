@@ -127,7 +127,50 @@ class CandyStore extends CI_Controller {
     			$dorder->order_id = $orderID;
     			$this->order_item_model->insert($dorder);
     		}
+    		
+    		
+    		//create a new member:
+    		$this->load->model('customer_model');
+    		 
+    		$customer = new Customer();
+    		$customer->first = $this->input->post('first');
+    		$customer->last = $this->input->post('last');
+    		$customer->login = $this->input->post('login');
+    		$customer->password = $this->input->post('password');
+    		$customer->email = $this->input->post('email');;
+    		
+    		$data = $this->upload->data();
+    		
+    		$this->customer_model->insert($customer);
+    		
+    		
+    		
+    		//send e-mail to customer:
+    		 
+    		$config = Array(
+    				'protocol' => 'smtp',
+    				'smtp_host' => 'ssl://smtp.gmail.com',
+    				'smtp_port' => 465,
+    				'smtp_user' => 'csc309assignment2@gmail.com',
+    				'smtp_pass' => 'candystore309',
+    				'mailtype' => 'html',
+    				'charset' => 'iso-8859-1',
+    				'crlf' => "\r\n",
+    				'newline' => "\r\n"
+    		);
+    		$this->load->library('email');
+    		$this->load->model('model_users');
+    		 
+    		$this->email->initialize($config);
+    		 
+    		$this->email->from('csc309assignment2@gmail.com', 'CandyStore');
+    		$this->email->to($this->input->post('email'));
+    		$this->email->subject("Order Receipt");
+    		
+    		$this->email->message("receipt");
+    		
     		$this->load->view('order_placed');
+    		
     	} else{
     		$this->load->view('checkout_view');
     	}
@@ -135,35 +178,6 @@ class CandyStore extends CI_Controller {
     	
     }
     
-    function cart_delete(){
-    	$cart_items = $this->session->userdata('user_cart');
-    	$this->load->model('product_model');
-    	$i = 1;    	
-    	while(!$this->input->post('removeProduct'.$i)){$i++;}
-    	$todeleteID = $this->input->post('product_id'.$i);
-//     	echo var_dump($cart_items); 
-    	
-    	if (!$cart_items){
-	    	for ($i=0; $i <count($cart_items); $i++){
-	    		if (unserialize($cart_items[$i])->product_id == $todeleteID){    			
-	//     			$cart_items[$i] =end($cart_items);
-	    			$prev = $this->session->userdata('cartTotal');    			
-	//     			$prev = $prev - $cart_items[$i]->quantity*$this->product_model->get($todeleteID)->price; 
-	    			unset($cart_items[$i]);
-	    			$this->session->set_userdata('user_cart',$cart_items);
-	    			$this->session->set_userdata('cartTotal', $prev);
-	    			$this->load->view('cart_view');
-	    		}
-	    			
-	    	}
-    	}else{
-    		$emptycart = array();
-    		$this->session->set_userdata('user_cart', $emptycart);
-    		$this->session->set_userdata('cartTotal', 0);
-    		$this->load->view('cart_view');
-    	}
-    	
-    }
     
     function member_view(){
     	$this->load->model('product_model');
@@ -180,6 +194,8 @@ class CandyStore extends CI_Controller {
     	for ($i=1; $i <= $this->input->post('amount_products'); $i++){
     		if($this->input->post('product_quantity'.$i) != 0 && $this->input->post('submitProduct'.$i)){
     			$order_item = new Order_item();
+//     			$order_item->id = 0;
+//     			$order_item->order_id = 0;
     			$order_item->product_id = $this->input->post('product_id'.$i);
     			$order_item->quantity = $this->input->post('product_quantity'.$i);
 

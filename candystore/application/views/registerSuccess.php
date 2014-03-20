@@ -1,24 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>CandyStore</title>
-
-</head>
-<body>
-
-<div>
-	<h1>Registration Succeded!!!</h1>
-</div>
+<?php include('inc/header.php'); ?>
 	<div id="body">
+		<h1>Registration Succeded!</h1>
 		<p>Let's have fun and buy some candy! =D</p>
 		<p>Click bellow to login</p>
 		
 		<?php
-			echo "<p>" . anchor('candystore/index','Let\'s buy candy!') . "</p>";
+			echo "<p><span id='button'>" . anchor('candystore/index','Start buying candy!') . "</span></p>";
 		?>
 		
 		</div>
-
-</body>
-</html>
+<?php include('inc/footer.php'); ?>
