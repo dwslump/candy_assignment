@@ -16,10 +16,11 @@
 		<?php 
 		$this->load->model('product_model');
 		$cart_items = $this->session->userdata('user_cart'); 
+		$total=0;
 		if(!$cart_items){ // Empty cart!
 			echo "<p>Your cart is empty!</p>";
 		}else{
-
+			
 			echo "<table>";
 			echo "<tr><th>Name</th><th>Description</th><th>Price</th><th>Image</th><th>Quantity</th></tr>";			
 			foreach ($cart_items as $order_item) {
@@ -33,7 +34,11 @@
 				echo "<td><img src='" . base_url() . "images/product/" . $product->photo_url . "' width='100px' /></td>";
 				echo "<td>". $helper->quantity ."</td>";
 				echo "</tr>";
+				$total+=$helper->quantity * $product->price;
 			}
+			echo "<tr>";
+			echo "<td>Total: ". $total ."</td>";
+			echo "</tr>";
 			echo "<table>";	
 		}
 		
@@ -42,8 +47,9 @@
 		</div>
 		
 		<div id="bottom">
-			<a href='javascript:history.back()' >Back</a><br>
-			<a href='<?php echo base_url()."candystore/logout";?>' >Checkout</a>
+<!-- 			<a href='javascript:history.back()' >Back</a><br> -->
+			<a href='<?php echo base_url()."candystore/member_view";?>' >Back</a><br>
+			<a href='<?php echo base_url()."candystore/checkout";?>' >Checkout</a>
 		</div>
 	
 
