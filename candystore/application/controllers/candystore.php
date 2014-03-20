@@ -69,7 +69,6 @@ class CandyStore extends CI_Controller {
     			 
     		}
     		else{	
-    			//user view
     			$this->db->select('id')->from('customer')->where('login',$this->session->userdata['login']);
     			$query = $this->db->get();
     			if($query->num_rows() > 0){
@@ -77,6 +76,8 @@ class CandyStore extends CI_Controller {
     			}
     			
     			$this->session->set_userdata('user_id', $uid->id);
+
+    			//user view    
     			$this->load->view('member_view',$data);
     		}
     		}
@@ -277,11 +278,11 @@ class CandyStore extends CI_Controller {
     		return false;
     	}
     	else{
-    		if($this->input->post('cmonth') < 0 || $this->input->post('cmonth') > 12){
+    		if($this->input->post('cmonth') < 1 || $this->input->post('cmonth') > 12){
     			$this->form_validation->set_message('validateCreditCard', '<span>Incorrect Month in CreditCard data</span>');
     			return false;
     		}
-    		if($this->input->post('cyear') < 2013){
+    		if($this->input->post('cyear') < 2014){
     			$this->form_validation->set_message('validateCreditCard', '<span>Year must be over 2014!</span>');
     			return false;
     		}
@@ -555,17 +556,12 @@ class CandyStore extends CI_Controller {
 			$orders = $query->result('Order');
 			$data['orders']= $orders;
 			
-			//getting the order_items from the orders above:
+			//getting the order_items from all orders
 			$this->load->model('order_item_model');
-			$order_items = array();
-			$data['order_items'] = array();
-			foreach($orders as $order){
-				$query = $this->db->get_where('order_item', array('order_id' => $order->id));
-				$order_items = $query->result('Order_item');
-				$data['order_items'] = $order_items;
-			}
+			$order_items = $this->order_item_model->getAll();
+			$data['order_items'] = $order_items;
 			
-			//getting the products of the order_items above:
+			//getting all products:
 			$this->load->model('product_model');
 			$products_order = $this->product_model->getAll();
 			$data['products_order'] = $products_order;
