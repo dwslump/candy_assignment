@@ -53,6 +53,9 @@
 			echo "<table>";	
 		}
 		
+		//we must certify that the session has been over.
+		$this->session->sess_destroy();
+		
 		?>
 		</div>
 	
@@ -60,16 +63,11 @@
 		<input type=button value="Print"
 		onClick="window.print()">
 		</form>
-
 		
 		
 		<div id="bottom">
-<!-- 		<a href='javascript:history.back()' >Back</a><br> -->
-			<a href='<?php echo base_url()."candystore/view_cart";?>' >Change your Order</a><br>
-		</div>
-		
-		<div id="bottom">
-			<a href='<?php echo base_url()."candystore/logout";?>' >Logout</a>
+			<p>Thanks for buying! You must login again if you want to place another order.</p>
+			<a href='<?php echo base_url()."candystore/logout";?>' >Login</a>
 		</div>
 		
 	
